@@ -1,10 +1,5 @@
-apply plugin: 'java'
-apply plugin: 'scala'
-apply plugin: 'idea'
-apply plugin: 'application'
-apply plugin: 'eclipse'
 
-description = 'Dao Manager'
+description = 'Java Guice JPA Hibernate'
 
 version = '0.1'
 
@@ -14,14 +9,19 @@ buildscript {
     }
 }
 
-
 group 'org.springframework.scala'
 archivesBaseName = "jpa_2.10"
+
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+
 
 ext {
   springVersion = '3.2.4.RELEASE'
   scalaVersion = '2.10.3'
-  scalaLibVersion = '2.10'
+  scalaLibVersion = '2.10.3'
 }
 
 repositories {
@@ -36,9 +36,9 @@ dependencies {
   compile("joda-time:joda-time:2.3")
   compile("joda-time:joda-time-hibernate:1.3")
   compile("mysql:mysql-connector-java:5.1.26")
-
-  // Scala
-//  compile("org.scala-lang:scala-library:$scalaVersion")
-//  compile("org.scala-lang:scala-reflect:$scalaVersion")
+//  compile("org.apache.logging.log4j:log4j-api:2.0-beta6")
+//  compile("org.apache.logging.log4j:log4j-core:2.0-beta6")
+//  compile("org.slf4j:slf4j-nop:1.7+")
+//  compile("org.scala-lang:scala-library:2.10.3")
 
 }
