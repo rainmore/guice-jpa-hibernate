@@ -25,7 +25,7 @@ public class Main {
         Injector injector = Guice.createInjector(new PersistenceModule(), new JpaPersistModule("JpaBasicsTutorial"));
         ApplicationInitializer app = injector.getInstance(ApplicationInitializer.class);
 
-//        injector.getInstance(OtherExample.class).run();
+        injector.getInstance(OtherExample.class).run();
 
         HelloWorld h1 = injector.getInstance(HelloWorld.class);
         HelloWorld h2 = injector.getInstance(HelloWorld.class);
