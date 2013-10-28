@@ -1,7 +1,14 @@
 package com.rainmore.java;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.rainmore.java.model.Person;
+import com.rainmore.java.services.HelloWorld;
+import com.rainmore.java.services.HelloWorldSingleton;
 import com.rainmore.java.services.PersonService;
+import com.rainmore.java.services.PersonServiceImpl;
+import org.hibernate.collection.internal.PersistentBag;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,50 +22,30 @@ public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     public static final void main(String... args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JpaBasicsTutorial");
-        EntityManager em = emf.createEntityManager();
+        Injector injector = Guice.createInjector(new PersistenceModule(), new JpaPersistModule("JpaBasicsTutorial"));
+        ApplicationInitializer app = injector.getInstance(ApplicationInitializer.class);
 
-        PersonService service = new PersonService(em);
+//        injector.getInstance(OtherExample.class).run();
 
-        System.out.println("--- Create and persist artist ---");
-        em.getTransaction().begin();
-        Person person = service.create("Franz Ferdinand");
-        Person person2 = service.create("Franz Ferdinand");
-        person2.setParent(person);
-        em.getTransaction().commit();
-        System.out.println(String.format("Persisted: %s\n", person));
+        HelloWorld h1 = injector.getInstance(HelloWorld.class);
+        HelloWorld h2 = injector.getInstance(HelloWorld.class);
 
-        Long id = person.getId();
+        System.out.println(h1.toString());
+        System.out.println(h2.toString());
 
-        System.out.println("--- Find artist ---");
-        person = service.findById(id);
-        System.out.println(String.format("Found: %s\n", person));
+        HelloWorldSingleton hs1 = injector.getInstance(HelloWorldSingleton.class);
+        HelloWorldSingleton hs2 = injector.getInstance(HelloWorldSingleton.class);
 
-        System.out.println("--- Find all artists ---");
-        List<Person> people = service.findAll();
-        for (Person foundPerson : people) {
-            System.out.println(String.format("Found: %s\n", foundPerson));
-            System.out.println(String.format("Found: %s\n", foundPerson.getParent()));
+        System.out.println(hs1.toString());
+        System.out.println(hs2.toString());
 
-            Set<Person> children = service.findChildren(foundPerson);
+        PersonService p1 = injector.getInstance(PersonService.class);
+        PersonService p2 = injector.getInstance(PersonService.class);
 
-            System.out.println(String.format("Found: %s\n", children.size()));
-        }
+        System.out.println(p1.toString());
+        System.out.println(p2.toString());
 
-        System.out.println("--- Update artist ---");
-        em.getTransaction().begin();
-        person = service.changeName(1L, "Indie Rock");
-        em.getTransaction().commit();
-        System.out.println(String.format("Updated: %s\n", person));
-
-//        System.out.println("--- Remove artist ---");
-//        em.getTransaction().begin();
-//        service.remove(2L);
-//        service.remove(1L);
-//        em.getTransaction().commit();
-//        person = service.findById(1L);
-//        System.out.println(String.format("Found: %s\n", person));
-
+        app.stop();
 
     }
 

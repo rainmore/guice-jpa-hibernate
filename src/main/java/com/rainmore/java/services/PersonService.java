@@ -1,21 +1,21 @@
 package com.rainmore.java.services;
 
 import com.rainmore.java.model.Person;
-import org.hibernate.SQLQuery;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class PersonService {
+public abstract class PersonService {
+
+    @Inject
     private EntityManager em;
 
-    public PersonService(EntityManager em) {
-        this.em = em;
-    }
-
+    @Transactional
     public Person create(String name) {
         Person Person = new Person(name);
         em.persist(Person);
@@ -23,6 +23,7 @@ public class PersonService {
         return Person;
     }
 
+    @Transactional
     public Person changeName(Long id, String name) {
         Person person = em.find(Person.class, id);
 
@@ -34,6 +35,7 @@ public class PersonService {
         return person;
     }
 
+    @Transactional
     public void remove(Long id) {
         Person Person = em.find(Person.class, id);
 
